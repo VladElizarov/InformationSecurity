@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+*.pyo
+instance/
+.env
+*.db
+.venv/
+venv/
+bandit-report.json
+pip-audit-report.json
