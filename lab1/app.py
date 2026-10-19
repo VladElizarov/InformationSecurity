@@ -1,4 +1,5 @@
 import os
+import secrets
 from dotenv import load_dotenv
 from flask import Flask, jsonify
 
@@ -12,9 +13,9 @@ load_dotenv()
 def create_app():
     app = Flask(__name__)
 
-    app.config['SECRET_KEY']                     = os.environ.get('SECRET_KEY', 'dev-secret')
-    app.config['JWT_SECRET_KEY']                 = os.environ.get('JWT_SECRET_KEY', 'S3cur3JWTSecretKeyF0rLab1Python256Bits!')
-    app.config['JWT_ACCESS_TOKEN_EXPIRES']       = int(os.environ.get('JWT_EXPIRATION_SEC', 86400))
+    app.config['SECRET_KEY']                     = os.environ.get('SECRET_KEY') or secrets.token_hex(32)
+    app.config['JWT_SECRET_KEY']                 = os.environ.get('JWT_SECRET_KEY') or secrets.token_hex(32)
+    app.config['JWT_ACCESS_TOKEN_EXPIRES']       = int(os.environ.get('JWT_EXPIRATION_SEC', 900))
     app.config['SQLALCHEMY_DATABASE_URI']        = os.environ.get('DATABASE_URL', 'sqlite:///securedb.db')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -43,5 +44,6 @@ def create_app():
 
 
 if __name__ == '__main__':
+    host = os.environ.get('HOST', '127.0.0.1')
     port = int(os.environ.get('PORT', 9091))
-    create_app().run(host='0.0.0.0', port=port, debug=False)
+    create_app().run(host=host, port=port, debug=False)
